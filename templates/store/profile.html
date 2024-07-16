@@ -1,0 +1,26 @@
+{% load static from static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <title>{{store.name}} | 探吉POS</title>
+</head>
+<body>
+    <h1>{{store.name}}</h1>
+
+    <div class="container">
+        <div class="row">
+            {% for category in categories %}
+            <div class="col-12 col-md-10 col-lg-8">
+                <h3>{{category.title}}</h3>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>
