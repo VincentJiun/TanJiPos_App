@@ -6,21 +6,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
-    <title>{{store.name}} | 探吉POS</title>
+    <title>{{request.user.store.name}} | 探吉POS</title>
 </head>
 <body>
-    <h1>{{store.name}}</h1>
+    <h1 class="mx-4 my-3">{{request.user.store.name}}</h1>
+
+    
 
     <div class="container">
-        <div class="row">
-            {% for category in categories %}
-            <div class="col-12 col-md-10 col-lg-8">
-                <h3>{{category.title}}</h3>
-            </div>
+        <!-- Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success" role="alert">
+                    {{message}}
+                </div>
             {% endfor %}
+        {% endif %}
+        
+        <!-- Categories -->
+        <h2>餐點類別</h2>
+        <div class="row my-2">
+            <ul class="nav justify-content-end">
+                <li class="nav-item">
+                  <a class="btn btn-primary" href="{% url 'add_category' %}">+新增類別</a>
+                </li>
+            </ul>
         </div>
-    </div>
+        <div class="row justify-content-center">
+            <div class="nav col-12 col-md-8 col-lg-6 my-2" id="foodTypeTab" role="tablist" aria-orientation="horizontal">
+                <!-- <a class="nav-link" id="v-pills-tab-foodType-all" data-toggle="pill" href="#v-pills-content-foodType-all" role="tab"><strong>全部</strong></a> -->
+                {% for category in request.user.store.category.all %}
+                    <a class="nav-link" id="v-pills-tab-foodType-{{foodType.ID}}" data-toggle="pill" href="#v-pills-content-foodType-{{foodType.ID}}" role="tab"><strong>{{category.title}}</strong></a>
+                {% endfor %}
+            </div>
+        </div>
+        <hr>
+        <!-- Products -->
+        <h2>上架餐點</h2>
+        <div class="row">
+            <ul class="nav justify-content-end">
+                <li class="nav-item">
+                  <a class="btn btn-primary" href="{% url 'add_product' %}">+新增餐點</a>
+                </li>
+            </ul>
+        </div>
 
+        <div class="row">
+            {% if products %}
+                {% for product in products %}
+                <div class="col-12 col-md-6 col-lg-4 my-2">
+                    <div class="card">
+                        {% if product.image %}
+                            <img src="{{product.image.url}}" class="img-fluid rounded-center w-100 px-3 py-2" alt="{{product.title}}" style="height: 200px;">
+                        {% endif %}
+                        <div class="card-body justify-content-end">
+                            <h5 class="card-title">{{product.title}}</h5>
+                            <h6 class="card-text">類別:{{product.category}}</h6>
+                            <h6 class="mx-3"><strong>NT$: {{product.price}}</strong></h6>
+                            <p class="card-text">{{product.description}}</p>
+                            <p class="card-text">狀態:{{product.status}}</p>
+                            <a href="{% url 'edit_product' product.id %}" class="btn btn-primary">修改</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="mx-3 my-2">You don't have any products yet ....</p>
+            {% endif %}
+        </div>
+        <hr>
+        <a class="btn btn-primary my-3" href="{% url 'signout' %}" role="button">Log Out</a>
+    </div>
+    
     <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>

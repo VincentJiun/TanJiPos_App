@@ -1,0 +1,40 @@
+{% load static from static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+
+    <title>{{store.name}} | 探吉POS</title>
+</head>
+<body>
+    <h1>購物車</h1>
+    {% if cart|length %}
+        {% for item in cart %}
+            <p>
+                <b>產品:</b>{{item.product.title}} <br>
+                <b>單價:</b>{{item.product.price}} <br>
+                <a class="btn btn-primary mx-3 my-2 btn-sm" href="{% url 'change_quantity' item.product.id %}?action=increase">+</a>
+                <b>數量:</b>{{item.quantity}} 
+                <a class="btn btn-primary mx-3 my-2 btn-sm" href="{% url 'change_quantity' item.product.id %}?action=decrease">-</a>
+                <a class="btn btn-danger mx-4 my-2 btn-sm" href="{% url 'remove_from_cart' item.product.id %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                    </svg>
+                </a>
+                <br>
+            </p>
+        {% endfor %}
+        <strong>總共:</strong>{{cart.get_total_cost}}
+        <hr>
+        <a class="btn btn-primary mx-4" href="{% url 'checkout' %}" role="button">結帳</a>
+    {% else %}
+        <h5>尚未購物</h5>
+    {% endif %}
+
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>
