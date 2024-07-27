@@ -11,7 +11,7 @@ from .forms import OrderForm
 def order_home(request, slug):
     cart = Cart(request)
 
-    print(cart.get_total_cost())
+    # print(cart.get_total_cost())
     store = get_object_or_404(Store, slug=slug)
     categories = store.category.all()
     products = store.product.filter(status=Product.ACTIVATE)
@@ -24,11 +24,15 @@ def order_home(request, slug):
 
 def add_to_cart(request, product_id):
     # store = get_object_or_404(Store, slug=slug)
-    
     cart = Cart(request)
     cart.add(product_id)
 
-    return redirect('cart_view')
+    product = get_object_or_404(Product, pk=product_id)
+    slug = product.store.slug
+
+    print(cart)
+
+    return redirect('order_home', slug=slug)
 
 def change_quantity(request, product_id):
     action = request.GET.get('action', '')

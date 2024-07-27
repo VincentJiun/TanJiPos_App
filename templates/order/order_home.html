@@ -53,18 +53,17 @@
                             <img src="{{product.image.url}}" class="img-fluid rounded-center px-3 py-2" alt="{{product.title}}" style="height: 150px;">
                         {% endif %}
                     </div>
-                    <div class="col-5">
+                    <div class="col-5 align-self-center">
                         <div class="card-body">
                             <h4 class="card-title my-1 mx-4"><strong>{{product.title}}</strong></h4>
-                            <h6 class="card-text mx-5">NT$:{{product.price}}</h6>
+                            <h6 class="card-text text-center">NT$:{{product.price}}</h6>
                             {% if product.description %}
                                 <p class="my-2">{{product.description}}</p>
                             {% endif %}
                         </div>
                     </div>
-                    <div class="col-3">
-                        <p></p>
-                        <a class="btn btn-primary mx-2 mt-5" href="{% url 'add_to_cart' product.id %}" role="button">加入購物車</a>
+                    <div class="col-3 align-self-center">
+                        <a class="btn btn-primary " href="{% url 'add_to_cart' product.id %}" role="button">加入購物車</a>
                     </div>
                     <hr>
                 </div>

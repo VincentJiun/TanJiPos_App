@@ -12,6 +12,14 @@ class Store(models.Model):
     def __str__(self):
         return self.name
     
+class Table(models.Model):
+    store = models.ForeignKey(Store, related_name='table', on_delete=models.CASCADE)
+    index = models.IntegerField()
+    title = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.index + '-' + self.title
+    
 class Category(models.Model):
     title = models.CharField(max_length=50)
     store = models.ForeignKey(Store, related_name='category', on_delete=models.CASCADE)
@@ -35,14 +43,15 @@ class Product(models.Model):
 
     store = models.ForeignKey(Store, related_name='product', on_delete=models.CASCADE)
     category = models.ForeignKey(Category, related_name='product', on_delete=models.CASCADE)
+    options = models.ManyToManyField('Option')
     title = models.CharField(max_length=50)
-    slug = models.SlugField(max_length=50)
     description = models.TextField(blank=True)
     price = models.IntegerField()
     image = models.ImageField(upload_to='uploads/products_images/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default=ACTIVATE)
+    
 
     class Meta:
         ordering = ('category',) # 排序
@@ -50,8 +59,17 @@ class Product(models.Model):
     def __str__(self):
         return self.title
     
-    # def save(self, *args, **kwargs):
-    #     if self.category.store != self.store:
-    #         raise ValueError("The category Error")
-        
-    #     super().save(*args, **kwargs)
+class Option(models.Model):
+    title = models.CharField(max_length=255)
+    store = models.ForeignKey(Store, related_name='option', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
+    
+class OptionValue(models.Model):
+    option = models.ForeignKey(Option, related_name='value', on_delete=models.CASCADE)
+    title = models.CharField(max_length=225)
+    price = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.title

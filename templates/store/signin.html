@@ -20,7 +20,6 @@
             <div class="col-4">
                 <h1>Sign In</h1>
                 <hr>
-                <div class="row">
                     <form class='col form-group load-form'  action='.' method='POST'>
                         {% csrf_token %}
                         {{form}}
@@ -28,7 +27,6 @@
                         <input type="hidden" name="next" value="{{ next }}">
                         <footer class="blockquote-footer mt-2"><cite>若登入失敗將退出此頁</cite></footer>
                     </form>
-                </div>
             </div>
             <div class="col-4"></div>
         </div>

@@ -20,7 +20,7 @@ def signup(request):
             store = Store.objects.create(manager=user, name=user.username, slug=user.username)
             # slug = user.store.slug
 
-            return redirect('store_profile')
+            return redirect('store_manage')
         
     else:
         form = UserCreationForm()
@@ -34,12 +34,12 @@ def signin(request):
 
     if request.method == "POST":
         return_form = AuthenticationForm(data=request.POST)
-        # print(return_form)
+
         if return_form.is_valid():
             user = return_form.get_user()
             login(request, user)
             # slug = user.store.slug
-            return redirect('store_profile')
+            return redirect('store_manage')
 
     
     return render(request, 'store/signin.html', {
@@ -51,10 +51,16 @@ def signout(request):
     return redirect('signin')
 
 @login_required
-def store_profile(request):
+def store_manage(request):
+    # products = request.user.store.product.all()   #.exclude(status=Product.DELETED)
+
+    return render(request, 'store/manage.html')
+
+@login_required
+def store_products(request):
     products = request.user.store.product.all()   #.exclude(status=Product.DELETED)
 
-    return render(request, 'store/profile.html', {
+    return render(request, 'store/products.html', {
         'products': products
     })
 
@@ -63,7 +69,7 @@ def add_product(request):
     store = request.user.store
 
     if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES, store=store)
+        form = ProductForm(request.POST, request.FILES)
 
         if form.is_valid():
             product = form.save(commit=False)
@@ -72,9 +78,10 @@ def add_product(request):
 
             messages.success(request, '新增商品完成')
 
-            return redirect('store_profile')
+            return redirect('store_products')
     else:
         form = ProductForm()
+        form.fields['category'].queryset = Category.objects.filter(store=request.user.store)
 
     return render(request, 'store/add_product.html', {
         'title': '新增餐點',
@@ -92,7 +99,7 @@ def add_category(request):
             category.store = request.user.store
             category.save()
 
-            return redirect('store_profile')
+            return redirect('store_products')
     else:
         form = CategoryForm()
 
@@ -111,9 +118,10 @@ def edit_product(request, pk):
 
             messages.success(request, '修改完成')
 
-            return redirect('store_profile')
+            return redirect('store_products')
     else:
         form = ProductForm(instance=product)
+        form.fields['category'].queryset = Category.objects.filter(store=request.user.store)
 
     return render(request, 'store/add_product.html', {
         'title': '修改餐點',
@@ -130,4 +138,9 @@ def delete_product(request, pk):
 
     messages.success(request, '商品已刪除')
 
-    return redirect('store_profile')
+    return redirect('store_manage')
+
+@login_required
+def store_options(request):
+
+    return render(request, 'store/options.html')
