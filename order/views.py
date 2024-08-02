@@ -7,23 +7,31 @@ from .cart import Cart
 from .models import Order, OrderItem
 from .forms import OrderForm
 
-
 def order_home(request, slug):
+    check = False
     cart = Cart(request)
+    table = request.GET.get('table', '')
+    table_name = ''
 
-    # print(cart.get_total_cost())
     store = get_object_or_404(Store, slug=slug)
     categories = store.category.all()
     products = store.product.filter(status=Product.ACTIVATE)
+    if table:
+        if store.table.filter(slug=table).exists():
+            table_slug = store.table.get(slug=table)
+            table_name = table_slug.title
+            check = True
 
     return render(request, 'order/order_home.html', {
         'store': store,
         'categories': categories,
-        'products': products
+        'products': products,
+        'table_name':table_name,
+        'check':check,
+        'table':table
     })
 
 def add_to_cart(request, product_id):
-    # store = get_object_or_404(Store, slug=slug)
     cart = Cart(request)
     cart.add(product_id)
 

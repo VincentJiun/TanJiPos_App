@@ -6,7 +6,8 @@ from django.contrib.auth.models import User
 class Store(models.Model):
     manager = models.OneToOneField(User, related_name='store', on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
-    slug = models.SlugField(max_length=50)
+    slug = models.SlugField(max_length=50, unique=True)
+    phone = models.CharField(max_length=50, null=True, blank=True)
     address = models.CharField(max_length=150, blank=True, null=True)
 
     def __str__(self):
@@ -14,11 +15,11 @@ class Store(models.Model):
     
 class Table(models.Model):
     store = models.ForeignKey(Store, related_name='table', on_delete=models.CASCADE)
-    index = models.IntegerField()
+    slug = models.CharField(max_length=20)
     title = models.CharField(max_length=10)
 
     def __str__(self):
-        return self.index + '-' + self.title
+        return self.slug + '-' + self.title
     
 class Category(models.Model):
     title = models.CharField(max_length=50)

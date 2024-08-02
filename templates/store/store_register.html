@@ -1,0 +1,61 @@
+{% extends 'store_base.html' %}
+{% load static from static %}
+
+{% block title %}
+店家註冊
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/store/store_register.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<form class="form-signin w-100 m-auto" action="" method="post">
+    {% if msg %}
+        <div class="alert alert-danger" role="alert">
+            {{msg}}
+        </div>
+    {% endif %}
+    {% csrf_token %}
+    <!-- LOGO -->
+    <!-- <img class="mb-4" src="../assets/brand/bootstrap-logo.svg" alt="" width="72" height="57"> -->
+
+    <h1 class="h3 mb-3 fw-normal"><Strong>店家註冊</Strong></h1>
+    <hr>
+
+    <div class="mb-3">
+        <label for="formAccount" class="form-label">帳號</label>
+        <input type="text" class="form-control" id="formAccount" name='username' placeholder="請輸入帳號" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="InputPassword1" class="form-label">密碼</label>
+        <input type="password" class="form-control" id="InputPassword1" name='password1' placeholder="請輸入密碼" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="InputPassword2" class="form-label">密碼確認</label>
+        <input type="password" class="form-control" id="InputPassword2" name='password2' placeholder="確認密碼" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="leInputEmail1" class="form-label">Email</label><small style="color: red;">*</small>
+        <input type="email" class="form-control" id="leInputEmail1" name="email" placeholder="Email" required>
+        <div id="emailHelp" class="form-text">信箱註冊後，若需要修改需聯繫客服。請確認輸入無誤後再送出。</div>
+    </div>
+    
+
+    <!-- <div class="checkbox mb-3">
+        <label>
+            <input type="checkbox" value="remember-me"> Remember me 
+        </label>
+    </div> -->
+
+    <button class="w-100 btn btn-lg btn-primary" type="submit">註冊</button>
+
+    <!-- Coperation -->
+    <!-- <p class="mt-5 mb-3 text-muted">&copy; 2017–2022</p> -->
+</form>
+
+{% endblock %}

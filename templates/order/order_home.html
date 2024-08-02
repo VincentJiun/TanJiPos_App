@@ -11,6 +11,7 @@
     <title>{{store.name}} | 探吉POS</title>
 </head>
 <body>
+    
     <div class="row justify-content-center">
         <div class="col-12 col-md-8 col-lg-6 py-2 px-4">
             <h4><strong>{{store.name}}</strong></h4>
@@ -33,6 +34,7 @@
         </div>
     </div>
     <br>
+    {% if check %}
     <!-- Categories -->
     <div class="row justify-content-center">
         <div class="nav col-12 col-md-8 col-lg-6" id="foodTypeTab" role="tablist" aria-orientation="horizontal">
@@ -71,6 +73,13 @@
             </div>
         </div>
     </div>
+    {% else %}
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6 py-2 px-4">
+            <h4 class="text-center"><strong>請確認桌號!!!</strong></h4>
+        </div>
+    </div>
+    {% endif %}
     <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>
