@@ -10,7 +10,8 @@
     <h1 class="mx-2 mt-3 mb-4">管理後臺</h1>
     <div class="row align-items-center justify-content-center">
         <div class="col-12 col-md-6 col-lg-4 col-xl-3 my-2">
-            <a href="{% url 'order_home' request.user.store.slug %}" style="text-decoration: none; color: black;">
+            <!-- href="{% url 'order_home' request.user.store.slug %}" -->
+            <a style="text-decoration: none; color: black;" data-bs-toggle="modal" data-bs-target="#orderModal">
                 <div class="card">
                     <p class="card-text text-center my-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-shop" viewBox="0 0 16 16">
@@ -22,6 +23,27 @@
                     </div>
                 </div>
             </a>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">請選擇桌號</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                {% for table in tables %}
+                    <a class="btn btn-primary" href="{% url 'order_home' table.store.slug %}?table={{table.slug}}" role="button">{{table.title}}</a>
+                {% endfor %}
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+            </div>
         </div>
 
         <div class="col-12 col-md-6 col-lg-4 col-xl-3 my-2">

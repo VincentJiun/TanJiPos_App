@@ -1,0 +1,16 @@
+{% extends 'store_base.html' %}
+
+{% block title %} 首頁 {% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>探吉POS 首頁</h1>
+    <p>
+        <a class="btn btn-primary" href="{% url 'store_register' %}" role="button">店家註冊</a>
+        <a class="btn btn-primary" href="{% url 'store_signin' %}" role="button">店家登入</a>
+    </p>
+</div>
+
+
+
+{% endblock %}

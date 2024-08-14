@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
 
-from .models import Store, Product, Category
+from .models import Store, Product, Category, Table
 from .forms import ProductForm, CategoryForm, UserForm, StoreForm
 
 # Create your views here.
@@ -93,8 +93,12 @@ def signout(request):
 
 @login_required
 def store_manage(request):
+    tables = Table.objects.filter(store=request.user.store)
 
-    return render(request, 'store/manage.html')
+
+    return render(request, 'store/manage.html', {
+        'tables': tables,
+    })
 
 @login_required
 def store_products(request):

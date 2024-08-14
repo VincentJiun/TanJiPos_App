@@ -17,6 +17,8 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+CSRF_TRUSTED_ORIGINS = ['https://**.ngrok-free.app']
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -32,7 +34,7 @@ CART_SESSION_ID = 'cart'
 
 SESSION_COOKIE_AGE = 86400
 
-LOGIN_URL = 'signin'
+LOGIN_URL = 'store_signin'
 
 
 # Application definition

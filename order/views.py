@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
-from store.models import Store, Product
+from store.models import Store, Product, Option, OptionValue
 
 from .cart import Cart
 from .models import Order, OrderItem
@@ -31,16 +31,33 @@ def order_home(request, slug):
         'table':table
     })
 
+def product_info(request, slug, product_id):
+    table = request.GET.get('table', '')
+    store = get_object_or_404(Store, slug=slug)
+    product = get_object_or_404(Product, id=product_id)
+    options = Option.objects.filter(store=store)
+    option_values = OptionValue.objects.all()
+    print(table)
+
+    return render(request, 'order/product_info.html',{
+        'table': table,
+        'store': store,
+        'product':product,
+        'options': options,
+        'option_values': option_values
+    })
+
 def add_to_cart(request, product_id):
+    table = request.GET.get('table')
+
     cart = Cart(request)
     cart.add(product_id)
 
     product = get_object_or_404(Product, pk=product_id)
     slug = product.store.slug
 
-    print(cart)
-
-    return redirect('order_home', slug=slug)
+    # print(pre)
+    return redirect(f'/order/{slug}/?table={table}')
 
 def change_quantity(request, product_id):
     action = request.GET.get('action', '')
@@ -60,8 +77,11 @@ def change_quantity(request, product_id):
 def cart_view(request):
     cart = Cart(request)
 
+    table = request.GET.get('table', '')
+
     return render(request, 'order/cart_view.html', {
-        'cart':cart
+        'cart':cart,
+        'table':table
     })
 
 def remove_from_cart(request, product_id):
