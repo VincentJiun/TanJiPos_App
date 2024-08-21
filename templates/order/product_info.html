@@ -35,32 +35,46 @@
         </div>
 
         <!-- Options -->
-        {% for option in options %}
-        <div class="card mb-4">
-            <div class="card-header">
-              {{option.title}}
-            </div>
-            
-            <ul class="list-group list-group-flush">
-                {% for value in option_values %}
-                    {% if value.option == option  %}
-                    <li class="list-group-item">{{ value.title }}</li>
+        <form action="{% url 'add_to_cart' product.pk %}?table={{table}}" method="post"> 
+            {% csrf_token %}
+            {% for option in options %}
+                <div class="card mb-5">
+                    <div class="card-header">
+                    {{option.title}}
+                    </div>
+                    {% for value in option_values %}
+                    {% if value.option == option %}
+                    <div class="form-check mx-5 my-2">
+                        <input class="form-check-input" type="radio" name="{{ value.pk }}" id="{{ value.pk }}">
+                        <label class="form-check-label" for="{{ value.pk }}">
+                            {{ value.title }}
+                        </label>
+                    </div>
+                    <hr>
                     {% endif %}
-                {% endfor %}
-            </ul>
-        </div>
-        {% endfor %}
-    </div>
-
-    <footer class="fixed-bottom my-3">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-12 text-center d-grid">
-                    <a class="btn btn-primary" href="{% url 'add_to_cart' product.id %}?table={{table}}" role="button">加入購物車</a>
+                    {% endfor %}
+                    <!-- <ul class="list-group list-group-flush">
+                        {% for value in option_values %}
+                            {% if value.option == option  %}
+                            <li class="list-group-item">{{ value.title }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul> -->
                 </div>
-            </div>
-        </div>
-    </footer>
+            {% endfor %}
+
+            <footer class="fixed-bottom my-3">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-12 text-center d-grid">
+                            <!-- <a class="btn btn-primary" href="{% url 'add_to_cart' product.id %}?table={{table}}" role="button">加入購物車</a> -->
+                            <button type="submit" class="btn btn-primary">加入購物車</button> 
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </form>
+    </div>
     <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>

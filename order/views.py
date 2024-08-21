@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from store.models import Store, Product, Option, OptionValue, Table
 
 from .cart import Cart
+from .order_cart import OrderCart
 from .models import Order, OrderItem
 from .forms import OrderForm
 
@@ -37,7 +38,7 @@ def product_info(request, slug, product_id):
     product = get_object_or_404(Product, id=product_id)
     options = Option.objects.filter(store=store)
     option_values = OptionValue.objects.all()
-    print(table)
+    # print(table)
 
     return render(request, 'order/product_info.html',{
         'table': table,
@@ -48,13 +49,27 @@ def product_info(request, slug, product_id):
     })
 
 def add_to_cart(request, product_id):
-    table = request.GET.get('table')
-
-    cart = Cart(request)
-    cart.add(product_id)
-
+    table = request.GET.get('table')  
     product = get_object_or_404(Product, pk=product_id)
     slug = product.store.slug
+    options = Option.objects.filter(store=product.store)
+    product_options = {}
+    # print(options)
+
+    if request.method == 'POST':
+        for option in options:
+            values = OptionValue.objects.filter(option=option)
+            for value in values:
+                if request.POST.get(str(value.pk))=='on':
+                    product_options.update({option.title:value.title})
+            
+    print(product_options)
+        
+    cart = Cart(request)
+    cart.add(product_id, options=product_options)
+
+    # cart = OrderCart(request)
+    # cart.add_item(product_id, product_options)
 
     return redirect(f'/order/{slug}/?table={table}')
 

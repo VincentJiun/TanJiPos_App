@@ -44,7 +44,7 @@ class Product(models.Model):
 
     store = models.ForeignKey(Store, related_name='product', on_delete=models.CASCADE)
     category = models.ForeignKey(Category, related_name='product', on_delete=models.CASCADE)
-    options = models.ManyToManyField('Option')
+    options = models.ManyToManyField('option')
     title = models.CharField(max_length=50)
     description = models.TextField(blank=True)
     price = models.IntegerField()
