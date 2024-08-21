@@ -22,9 +22,10 @@
     {% endfor %}
     
     <strong>總共: NT$ </strong>{{cart.get_total_cost}}
+    <a class="btn btn-primary" href="{% url 'order_home' store.slug %}?table={{table}}" role="button">繼續購物</a>
     <hr>
     
-    <form action="." method="post">
+    <form action="{% url 'checkout' store.slug %}?table={{table}}" method="post">
         {% csrf_token %}
         {{form.as_p}}
         <button class="btn btn-success">確認結帳</button>

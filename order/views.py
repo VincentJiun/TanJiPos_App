@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
-from store.models import Store, Product, Option, OptionValue
+from store.models import Store, Product, Option, OptionValue, Table
 
 from .cart import Cart
 from .models import Order, OrderItem
@@ -56,11 +56,13 @@ def add_to_cart(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
     slug = product.store.slug
 
-    # print(pre)
     return redirect(f'/order/{slug}/?table={table}')
 
 def change_quantity(request, product_id):
     action = request.GET.get('action', '')
+    table = request.GET.get('table', '')
+    product = get_object_or_404(Product, pk=product_id)
+    slug = product.store.slug
 
     if action:
         quantity = 1
@@ -71,27 +73,37 @@ def change_quantity(request, product_id):
         cart = Cart(request)
         cart.add(product_id, quantity, True)
     
-    return redirect('cart_view')
+    return redirect(f'/order/{slug}/cart/?table={table}')
 
 
-def cart_view(request):
+def cart_view(request, slug):
     cart = Cart(request)
-
+    store = get_object_or_404(Store, slug=slug)
+    order_tables = Table.objects.filter(store = store)
     table = request.GET.get('table', '')
 
     return render(request, 'order/cart_view.html', {
         'cart':cart,
+        'store':store,
+        'order_tables':order_tables,
         'table':table
     })
 
 def remove_from_cart(request, product_id):
     cart = Cart(request)
     cart.remove(product_id)
+    table = request.GET.get('table', '')
 
-    return redirect('cart_view')
+    product = get_object_or_404(Product, pk=product_id)
+    slug = product.store.slug
 
-def checkout(request):
+    return redirect(f'/order/{slug}/cart/?table={table}')
+
+def checkout(request, slug):
     cart = Cart(request)
+    table = request.GET.get('table', '')
+    store = get_object_or_404(Store, slug=slug)
+    
 
     if request.method == 'POST':
         form = OrderForm(request.POST)
@@ -115,11 +127,13 @@ def checkout(request):
 
             cart.clear()    
 
-            return redirect('cart_view')
+            return redirect(f'/order/{slug}/?table={table}')
     else:
         form = OrderForm()
 
     return render(request, 'order/checkout.html', {
+        'table':table,
+        'store':store,
         'cart': cart,
         'form': form
     })
